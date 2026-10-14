@@ -16,7 +16,7 @@ def deteksi_anomali_email(email):
 
     if local:
         if local.startswith(".") or local.endswith("."):
-            list_error.append("Bagian local tidak boleh diawali atau diakhiri titik, serta tidak boleh mengandung titik berurutan")
+            list_error.append("Bagian local tidak boleh diawali atau diakhiri titik, serta tidak boleh mengandung titik berurutan.")
         if ".." in local:
             list_error.append("Bagian local tidak boleh diawali atau diakhiri titik, serta tidak boleh mengandung titik berurutan")
 
