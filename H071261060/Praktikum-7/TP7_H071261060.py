@@ -8,12 +8,11 @@ file_history = os.path.join(folder_saat_ini, "trx_history.txt")
 os.makedirs(folder_invoices, exist_ok=True)
 
 def membuat_invoices(kasir, data_produk):
-    waktu_sekarang = datetime.now().strftime("%Y%m%d%H%M%S")
     id_nama = kasir[:3].upper()
-    id_tahun = waktu_sekarang[2:4]
-    id_bulan = waktu_sekarang[4:6]
-    id_tanngal = waktu_sekarang[6:8]
-    id_jam_menit = waktu_sekarang[8:12]
+    id_tahun = datetime.now().strftime("%Y")
+    id_bulan = datetime.now().strftime("%m")
+    id_tanngal = datetime.now().strftime("%d")
+    id_jam_menit = datetime.now().strftime("%H%M")
     angka_random = random.randint(100, 999)
     border = "=" * 79
     border1 = "|" + "Nama".center(38) + "|" + "Harga".center(14) + "|" + "Jumlah".center(8) + "|" + "Total".center(14) + "|"
@@ -21,11 +20,12 @@ def membuat_invoices(kasir, data_produk):
     total_item = 0
     nama_file = f"{id_nama}{id_tahun}{id_bulan}{id_tanngal}{id_jam_menit}{angka_random}.txt"
     file_dalam_folder = os.path.join(folder_invoices, nama_file)
+
     with open(file_dalam_folder, "w") as o:
         o.write(f"TOKO {kasir.capitalize()}".center(100) + "\n")
         o.write("=" * 100)
         o.write("\nNama kasir".ljust(20) + f": {kasir}")
-        o.write("\nWaktu transaksi".ljust(20) + f": {id_tanngal}/{id_bulan}/{id_tahun} {waktu_sekarang[8:10]}:{waktu_sekarang[10:12]}")
+        o.write("\nWaktu transaksi".ljust(20) + f": {id_tanngal}/{id_bulan}/{id_tahun} {id_jam_menit[:2]}:{id_jam_menit[2:]}")
         o.write("\n" + "=" * 100 + "\n")
         o.write("\n" + "Daftar Produk".center(100) + "\n")
         o.write("\n" + border.center(100))
@@ -43,15 +43,28 @@ def membuat_invoices(kasir, data_produk):
         o.write("\n" + "=" * 100)
         o.write("\n" + "TERIMAKASIH TELAH BELANJA".center(100))
         o.write("\n" + "=" * 100)
+
     with open(file_history, "a") as isi:
-        isi.write("\n| " + f"{id_tanngal}/{id_bulan}/{id_tahun} {waktu_sekarang[8:10]}:{waktu_sekarang[10:12]}".ljust(28) + "| " + f"{id_nama}{id_tahun}{id_bulan}{id_tanngal}{id_jam_menit}{angka_random}".ljust(29) + "|" + f"Rp{total_keseluruhan}".rjust(26) + " |")
+        isi.write("\n| " + f"{id_tanngal}/{id_bulan}/{id_tahun} {id_jam_menit[:2]}:{id_jam_menit[2:]}".ljust(28) + "| " + f"{id_nama}{id_tahun}{id_bulan}{id_tanngal}{id_jam_menit}{angka_random}".ljust(29) + "|" + f"Rp{total_keseluruhan}".rjust(26) + " |")
         isi.write("\n" + ("=" * 90))
     print("=" * 54)
     print("TRANSAKSI BERHASIL".center(54))
+
+def cari_transaksi(transaksi):
+    lokasi_file_folder = os.path.join(folder_invoices, transaksi + ".txt")
+    if os.path.isfile(lokasi_file_folder):
+            with open(lokasi_file_folder, "r") as ada:
+                isi = ada.read()
+                print("=== ISI FILE ===")
+                print(isi)
+    else:
+        print(f"File '{transaksi}' tidak ditemukan.")
+
 print("=" * 54)
 print("SELAMAT DATANG".center(54))
 print("=" * 54)
 nama_kasir = input("Masukkan nama kasir".ljust(35) + ": ")
+
 while True:
     print("=" * 54)
     print("Pilih opsi:")
@@ -96,14 +109,7 @@ while True:
                 continue
     elif pilih_opsi == "2":
         id_transaksi = input("Masukkan ID transaksi".ljust(35) + ": ")
-        lokasi_file_folder = os.path.join(folder_invoices, id_transaksi+".txt")
-        if os.path.isfile(lokasi_file_folder):
-            with open(lokasi_file_folder, "r") as ada:
-                isi = ada.read()
-                print("=== ISI FILE ===")
-                print(isi)
-        else:
-            print(f"File '{id_transaksi}' tidak ditemukan.")
+        cari_transaksi(id_transaksi)
     elif pilih_opsi == "3":
         print("Terimas kasih!")
         break
