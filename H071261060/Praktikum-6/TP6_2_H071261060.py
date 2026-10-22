@@ -26,9 +26,9 @@ def hitung_suara(rekap_suara, kandidat_set):
 
 def tampilkan_hasil(perolehan):
     tertinggi = max(perolehan.values())
-    nama_tertinggi = max(perolehan.keys())
+    nama_tertinggi = max(perolehan, key=perolehan.get)
     ada_berapa_pemilih = sum(perolehan.values())
-    mencari_nilai_seri = len(perolehan.values()) != len(set(perolehan.values()))
+    mencari_nilai_seri = list(perolehan.values()).count(tertinggi) > 1
     print()
     print("=================================")
     print("   HASIL PEMILIHAN KETUA KELAS")
